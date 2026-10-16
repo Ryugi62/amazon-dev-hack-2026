@@ -27,7 +27,7 @@ This is a simulated Alexa+ experience, which the rules allow: "Alternatively, en
 | Fixed blocks moved by NextOne | 0 |
 
 ## Design
-- One title, at most two fields, one action per card, the rule in the Alexa+ design guide: "Show only the information the customer needs to make the next decision. One title, one or two supporting fields, one clear action." A test checks it for every tool.
+- One title, at most two fields, one action per card, the rule in the Alexa+ design guide: "Show only the information the customer needs to make the next decision. One title, one or two supporting fields, one clear action." A test validates every card of the scripted five-turn scenario against it.
 - Errors always carry the next step and no internal ids. A failed "done" says what is needed ("Needs a photo, file, link or third_party signal") and offers one action, "Add proof".
 - First screen to the core result in two steps: ask "what should I do now?", read one block and two previews. The simulated-host banner is visible without scrolling.
 - Screenshots, in gallery order (all from the running simulation, banner visible):
