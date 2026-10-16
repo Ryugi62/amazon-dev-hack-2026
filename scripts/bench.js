@@ -37,6 +37,9 @@ function testCount() {
 const metrics = { generated_by: 'scripts/bench.js', replan: replanStats(), latency: await latency(), throughput: await measureThroughput(), tests: { tests: 0, passed: 0, failed: 0 } };
 // The tests read docs/metrics.json, so write the measured numbers first, then count the tests against them.
 writeFileSync(join(root, 'docs', 'metrics.json'), `${JSON.stringify(metrics, null, 2)}\n`);
+const rebuildDocs = () => spawnSync('node', [join(root, 'scripts', 'build-readme.js')], { cwd: root, encoding: 'utf8' });
+rebuildDocs(); // the doc-consistency tests compare the docs with the new metrics, so rebuild before counting
 metrics.tests = testCount();
 writeFileSync(join(root, 'docs', 'metrics.json'), `${JSON.stringify(metrics, null, 2)}\n`);
+rebuildDocs(); // the test count itself appears in the docs (scripts/build-readme.js)
 console.log(JSON.stringify(metrics, null, 2));

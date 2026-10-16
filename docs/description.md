@@ -24,8 +24,8 @@ This is a simulated Alexa+ experience, which the rules allow: "Alternatively, en
 - Self-hosted MCP server, zero dependencies, Node 20+: `initialize`, `tools/list`, `tools/call`, `resources/list`, `resources/read` over Streamable HTTP, protocol version 2025-11-25. Seven tools, one per customer intent: `get_next_up`, `report_running_late`, `complete_block`, `skip_block`, `add_block`, `get_today`, `get_rules`.
 - MCP Apps card (`text/html;profile=mcp-app`, `ui/initialize`, tool-result notification), packaged as one self-contained HTML file whose resource URI carries a content hash.
 - Clean layers (domain, application, adapters, infrastructure); a test fails the build on an upward import. State is a file store; a restart test proves a fresh server gives the same next-up answer.
-- Round trip on local loopback: 1.7 ms p50 and 2.3 ms p95 over 200 calls, against the 500 ms limit in the quickstart (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html). 102 tests, all passing.
-- Throughput limit, measured with real concurrent MCP calls (half reads, half state-changing writes, fresh server per level): peak 3253 calls per second; p95 more than triples at concurrency 64; p95 stays under the 500 ms limit up to concurrency 256 (the highest level tested), on one developer laptop over loopback. This is a single-process file-store design, not a claim about production scale.
+- Round trip on local loopback: 1.7 ms p50 and 2.3 ms p95 over 200 calls, against the 500 ms limit in the quickstart (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html). 103 tests, all passing.
+- Throughput limit, measured with real concurrent MCP calls (half reads, half state-changing writes, fresh server per level): peak 3215 calls per second; p95 more than triples at concurrency 64; p95 stays under the 500 ms limit up to concurrency 256 (the highest level tested), on one developer laptop over loopback. This is a single-process file-store design, not a claim about production scale.
 - Every number in the README and here is generated into `docs/metrics.json` by `npm run bench`; `npm run check-docs` fails when a document disagrees.
 
 **The metric (one definition, used everywhere).** **Overlap minutes after a late event** = minutes covered by two or more blocks once the user says "I'm N minutes late" (lower is better). Baseline: the behaviour of a reminder that only moves the late item.
@@ -57,7 +57,7 @@ This is a simulated Alexa+ experience, which the rules allow: "Alternatively, en
 
 | Date | Milestone | Resources | Target |
 |---|---|---|---|
-| 2026-10-23 | Submission closes (12:00 pm Pacific) | 1 developer, $0 infrastructure | 102 tests passing, 0 overlap on 751 counted days |
+| 2026-10-23 | Submission closes (12:00 pm Pacific) | 1 developer, $0 infrastructure | 103 tests passing, 0 overlap on 751 counted days |
 | 2026-11-30 | Read-only calendar import so a real fixed-event list can seed the day | 1 developer, $0 | At least 1 import adapter, fixed blocks moved stays 0 |
 | 2027-01-31 | Measure with users outside my circle | 1 developer, $0 | At least 10 users, overlap minutes before vs after reported with raw data |
 
