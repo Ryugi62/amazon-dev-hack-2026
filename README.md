@@ -27,8 +27,8 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Runs where the shift-only baseline leaves overlap | 542 (72.2%) |
 | Mean overlap the baseline leaves, over those runs (minutes) | 36.3 |
 | Fixed blocks moved by NextOne | 0 |
-| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 4 / 10.5 ms over 200 calls |
-| Tests | 83 of 84 passing |
+| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 2.3 / 2.9 ms over 200 calls |
+| Tests | 91 of 91 passing |
 
 The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so 751 are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
 

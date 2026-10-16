@@ -7,7 +7,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 // SPEC.md may carry one HTML comment with repo-gate keywords; comments are not rendered, so they are ignored here.
 const read = (p) => readFileSync(join(root, p), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
 
-export const PUBLIC_FILES = ['README.md', 'SPEC.md', 'docs/comparison.md', 'docs/friction-log.md', 'docs/README.tpl.md', ...readdirSync(join(root, 'host')).map((f) => `host/${f}`), 'src/adapters/card.html'];
+export const PUBLIC_FILES = ['README.md', 'SPEC.md', 'docs/comparison.md', 'docs/friction-log.md', 'docs/description.md', 'docs/README.tpl.md', ...readdirSync(join(root, 'host')).map((f) => `host/${f}`), 'src/adapters/card.html'];
 const INTERNAL = [/\[\[/, /projects\//, /board\.md/, /\bTODO\b/, /\bFIXME\b/, /Jarvis/i, /main judgment/i];
 
 export function checkLanguage() {

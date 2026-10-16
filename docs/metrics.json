@@ -11,13 +11,13 @@
   "latency": {
     "calls": 200,
     "p50_ms": 1.7,
-    "p95_ms": 4,
-    "max_ms": 10.5,
+    "p95_ms": 2.3,
+    "max_ms": 2.9,
     "limit_ms": 500
   },
   "tests": {
-    "tests": 84,
-    "passed": 83,
-    "failed": 1
+    "tests": 91,
+    "passed": 91,
+    "failed": 0
   }
 }
