@@ -1,0 +1,22 @@
+{
+  "generated_by": "scripts/bench.js",
+  "replan": {
+    "runs": 751,
+    "nextone_overlap_runs": 0,
+    "baseline_overlap_runs": 542,
+    "baseline_overlap_percent": 72.2,
+    "fixed_blocks_moved": 0
+  },
+  "latency": {
+    "calls": 200,
+    "p50_ms": 1.7,
+    "p95_ms": 2.1,
+    "max_ms": 2.8,
+    "limit_ms": 500
+  },
+  "tests": {
+    "tests": 73,
+    "passed": 73,
+    "failed": 0
+  }
+}

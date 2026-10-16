@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NextOne card</title>
+<style>
+  :root { --bg:#fff; --fg:#191f28; --sub:#4e5968; --line:#e5e8eb; --accent:#1b64da; }
+  :root[data-theme="dark"] { --bg:#17171c; --fg:#f2f4f6; --sub:#b0b8c1; --line:#333d4b; --accent:#2a62d3; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#17171c; --fg:#f2f4f6; --sub:#b0b8c1; --line:#333d4b; --accent:#2a62d3; } }
+  html, body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui,sans-serif; }
+  body { padding:16px; }
+  .card { border:1px solid var(--line); border-radius:16px; padding:20px; max-width:420px; margin:0 auto; }
+  .card.large { max-width:640px; font-size:20px; }
+  h1 { font-size:1.4em; margin:0 0 8px; }
+  p { margin:0 0 4px; color:var(--sub); }
+  button { margin-top:16px; width:100%; min-height:48px; border:0; border-radius:12px; background:var(--accent); color:#fff; font:600 1em system-ui,sans-serif; }
+</style>
+</head>
+<body>
+<div class="card" id="card" role="status" aria-live="polite"><h1 id="title">NextOne</h1><div id="fields"></div><button id="action" type="button">Waiting for a result</button></div>
+<script>
+  // MCP App view. Talks to the host only over the postMessage bridge (ui/* methods).
+  // Renders exactly one title, at most two fields and one action, per the Alexa+ design guide.
+  var pending = {};
+  var nextId = 1;
+  function request(method, params) {
+    return new Promise(function (resolve) {
+      var id = nextId++;
+      pending[id] = resolve;
+      window.parent.postMessage({ jsonrpc: '2.0', id: id, method: method, params: params }, '*');
+    });
+  }
+  function notify(method, params) { window.parent.postMessage({ jsonrpc: '2.0', method: method, params: params }, '*'); }
+  function applyHostContext(ctx) {
+    if (!ctx) return;
+    if (ctx.theme) document.documentElement.setAttribute('data-theme', ctx.theme);
+    var large = ctx.deviceClass && /15|large|tv/i.test(ctx.deviceClass);
+    document.getElementById('card').className = large ? 'card large' : 'card';
+  }
+  function render(card) {
+    if (!card) return;
+    document.getElementById('title').textContent = card.title;
+    var f = document.getElementById('fields');
+    f.textContent = '';
+    card.fields.slice(0, 2).forEach(function (t) { var p = document.createElement('p'); p.textContent = t; f.appendChild(p); });
+    var b = document.getElementById('action');
+    b.textContent = card.action.label;
+    b.onclick = function () { notify('ui/message', { role: 'user', content: [{ type: 'text', text: card.action.label }] }); };
+  }
+  window.addEventListener('message', function (e) {
+    var m = e.data;
+    if (!m || m.jsonrpc !== '2.0') return;
+    if (m.id !== undefined && pending[m.id]) { pending[m.id](m); delete pending[m.id]; return; }
+    if (m.method === 'ui/notifications/tool-result' && m.params && m.params.structuredContent) render(m.params.structuredContent.card);
+    if (m.method === 'ui/notifications/host-context-changed') applyHostContext(m.params);
+  });
+  request('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'nextone-card', version: '1.0.0' }, appCapabilities: {} }).then(function (r) {
+    if (r && r.result) applyHostContext(r.result.hostContext);
+    notify('ui/notifications/initialized', {});
+  });
+</script>
+</body>
+</html>

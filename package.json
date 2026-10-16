@@ -1,0 +1,14 @@
+{
+  "name": "nextone-alexa-mcp",
+  "version": "1.0.0",
+  "description": "NextOne: a day-operating MCP add-on for Alexa+ (simulated host included).",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "start": "node src/infrastructure/server.js",
+    "bench": "node scripts/bench.js",
+    "check-docs": "node scripts/check-docs.js"
+  },
+  "engines": { "node": ">=20" }
+}
