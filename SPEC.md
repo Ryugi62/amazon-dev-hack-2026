@@ -18,7 +18,7 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 - Card: {title, fields (max 2), action (exactly 1)}.
 
 ## Success conditions (numbers)
-1. MCP: real HTTP client completes initialize -> tools/list -> tools/call; tools/list returns >= 6 tools; protocolVersion 2025-11-25; the card resource (ui://nextone/card-<content hash>.html) is readable as text/html;profile=mcp-app, speaks the MCP Apps bridge (ui/initialize, hostContext, tool-result), and every tool round trip stays under 500 ms (the Alexa+ MCP quickstart limit).
+1. MCP: real HTTP client completes initialize -> tools/list -> tools/call; tools/list returns >= 6 tools; protocolVersion 2025-11-25 (rules: "implementing MCP spec version 2025-11-25", https://amazonappdev2026.devpost.com/rules section 4; quickstart: "The MCP specification (2025-11-25) deprecated the standalone HTTP+SSE transport", https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html); the card resource (ui://nextone/card-<content hash>.html) is readable as text/html;profile=mcp-app, speaks the MCP Apps bridge (ui/initialize, hostContext, tool-result), and every tool round trip stays under 500 ms (quickstart: "Your MCP server must meet a round-trip query response latency of less than 500 ms", https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html).
 2. Re-plan: over 1000 seeded random days x late 5..120 min, overlap minutes after re-plan = 0 in 100% of runs; fixed blocks moved = 0; naive shift-only baseline leaves overlap in >= 20% of the same runs (measured, written to docs/metrics.json).
 3. Evidence rule: 100% of 'done' requests without valid Evidence are rejected; honest-completion rate = 100% after any operation sequence (property test, 500 sequences).
 4. Persistence: state written by server A is read by a freshly started server B (restart test) with identical next-up result.
@@ -35,7 +35,7 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 - Given server restarted; When get_next_up; Then same answer as before restart.
 
 ## Non-goals
-Real Alexa+ device or account (participants have no access; the host here is a simulation and is labelled so everywhere). Real user data (all data synthetic). Auth, payments, model training. Natural-language understanding beyond a small rule-based stand-in for the host LLM.
+Real Alexa+ device or account (not used: the rules say "Alternatively, entrants may submit a simulated Alexa+ experience", https://amazonappdev2026.devpost.com/rules section 4; the host here is a simulation and is labelled so everywhere). Real user data (all data synthetic). Auth, payments, model training. Natural-language understanding beyond a small rule-based stand-in for the host LLM.
 
 ## Architecture (Clean)
 src/domain (pure) <- src/application (use cases, card presenter) <- src/adapters (MCP JSON-RPC) <- src/infrastructure (HTTP server, file store). No reverse imports (test/architecture.test.js enforces).
