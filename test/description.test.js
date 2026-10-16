@@ -45,3 +45,25 @@ test('the description has a USD estimate with its formula and a milestone table 
   assert.match(d, /\$\d+(\.\d+)? per/);
   assert.ok(d.split('\n').filter((l) => /^\| 20\d\d-\d\d-\d\d/.test(l)).length >= 3);
 });
+
+test('the comparison with what Alexa+ already does sits right under "What only NextOne has", inside the first two pages', () => {
+  const only = d.indexOf('**What only NextOne has');
+  const heading = d.indexOf('Versus what Alexa+ already does');
+  assert.ok(only >= 0 && heading > only, 'comparison must follow the one-line claim');
+  assert.ok(d.slice(only, heading).split('\n').filter((l) => /^#{1,3} /.test(l)).length <= 1, 'at most one heading between the claim and the comparison');
+  assert.ok(heading < 6000, `comparison starts at char ${heading}, two pages is about 6000`);
+  const rows = d.slice(heading).split('\n').filter((l) => /^\| .*https?:\/\//.test(l));
+  assert.ok(rows.length >= 3);
+  assert.match(d.slice(heading, heading + 4000), /Host LLM default capability/);
+});
+
+test('the round-trip line in the description equals metrics.json', () => {
+  const l = metrics.latency;
+  assert.ok(d.includes(`${l.p50_ms} ms p50 and ${l.p95_ms} ms p95 over ${l.calls} calls`));
+});
+
+test('the description quotes the generated throughput numbers', () => {
+  const t = metrics.throughput;
+  assert.ok(d.includes(`${t.peak_calls_per_second} calls per second`));
+  assert.ok(d.includes(`concurrency ${t.knee_concurrency}`));
+});

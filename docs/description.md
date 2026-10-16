@@ -6,6 +6,17 @@
 
 **What only NextOne has (one line):** a whole-day re-plan with an invariant you can check (0 overlapping minutes, 0 fixed blocks moved) *plus* a completion rule that needs evidence, inside the Alexa+ conversation.
 
+### Versus what Alexa+ already does, and what the host model may already do
+I checked each on 2026-10-16.
+
+| Existing option | What it does | What NextOne adds | Source |
+|---|---|---|---|
+| Alexa+ reminders and task list (Amazon) | Snooze: "Snooze reminder for 20 minutes" | Snooze moves one reminder; NextOne re-plans every later block around fixed events | https://www.amazon.com/gp/help/customer/display.html?nodeId=T30e4eImkYHXKiYbvr |
+| Alexa+ follow-up reminders (Amazon) | "Alexa sends you reminder notifications every hour or day until you confirm that you've completed the task." | The confirmation is your word; NextOne does not record done without a photo, file, link or third_party reference | same page |
+| Alexa+ calendar and summaries (Amazon) | "meaningful summaries of your day, helps you schedule events when everyone is free" | That page describes no re-plan after a delay; NextOne answers "what is next" with previews and re-plans on "I'm late" | https://www.aboutamazon.com/news/devices/new-alexa-plus-amazon-devices |
+| Motion (third-party review) | Reported to reschedule the day automatically when you fall behind | Not an Alexa+ add-on; no proof requirement for done | https://www.morgen.so/blog-posts/motion-review |
+| Host LLM default capability | Unknown: I found no page saying the Alexa+ model re-plans a day or asks for proof | The server enforces both, so it does not depend on the host model | none (no source found) |
+
 ## Simulation, stated first
 This is a simulated Alexa+ experience, which the rules allow: "Alternatively, entrants may submit a simulated Alexa+ experience instead" (https://amazonappdev2026.devpost.com/rules, section 4). No Alexa+ device or account was used. The MCP server is real (Streamable HTTP, spec 2025-11-25); the host that talks to it is a small stand-in with a rule-based intent mapper instead of the Alexa+ model. All data is synthetic. Limit: nothing here ran on an Alexa+ device, and the Alexa+ Local Inspector needs a developer-console login I do not have (friction log entry 4).
 
@@ -13,7 +24,8 @@ This is a simulated Alexa+ experience, which the rules allow: "Alternatively, en
 - Self-hosted MCP server, zero dependencies, Node 20+: `initialize`, `tools/list`, `tools/call`, `resources/list`, `resources/read` over Streamable HTTP, protocol version 2025-11-25. Seven tools, one per customer intent: `get_next_up`, `report_running_late`, `complete_block`, `skip_block`, `add_block`, `get_today`, `get_rules`.
 - MCP Apps card (`text/html;profile=mcp-app`, `ui/initialize`, tool-result notification), packaged as one self-contained HTML file whose resource URI carries a content hash.
 - Clean layers (domain, application, adapters, infrastructure); a test fails the build on an upward import. State is a file store; a restart test proves a fresh server gives the same next-up answer.
-- Round trip on local loopback: 1.7 ms p50 and 2.6 ms p95 over 200 calls, against the 500 ms limit in the quickstart (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html). 91 tests, all passing.
+- Round trip on local loopback: 1.7 ms p50 and 2.3 ms p95 over 200 calls, against the 500 ms limit in the quickstart (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html). 102 tests, all passing.
+- Throughput limit, measured with real concurrent MCP calls (half reads, half state-changing writes, fresh server per level): peak 3253 calls per second; p95 more than triples at concurrency 64; p95 stays under the 500 ms limit up to concurrency 256 (the highest level tested), on one developer laptop over loopback. This is a single-process file-store design, not a claim about production scale.
 - Every number in the README and here is generated into `docs/metrics.json` by `npm run bench`; `npm run check-docs` fails when a document disagrees.
 
 **The metric (one definition, used everywhere).** **Overlap minutes after a late event** = minutes covered by two or more blocks once the user says "I'm N minutes late" (lower is better). Baseline: the behaviour of a reminder that only moves the late item.
@@ -45,22 +57,12 @@ This is a simulated Alexa+ experience, which the rules allow: "Alternatively, en
 
 | Date | Milestone | Resources | Target |
 |---|---|---|---|
-| 2026-10-23 | Submission closes (12:00 pm Pacific) | 1 developer, $0 infrastructure | 91 tests passing, 0 overlap on 751 counted days |
+| 2026-10-23 | Submission closes (12:00 pm Pacific) | 1 developer, $0 infrastructure | 102 tests passing, 0 overlap on 751 counted days |
 | 2026-11-30 | Read-only calendar import so a real fixed-event list can seed the day | 1 developer, $0 | At least 1 import adapter, fixed blocks moved stays 0 |
 | 2027-01-31 | Measure with users outside my circle | 1 developer, $0 | At least 10 users, overlap minutes before vs after reported with raw data |
 
 ## Quality of the Idea
 - **Versus the track's "Obvious" list.** The Alexa+ track lists "single-turn Q&A bot, basic MCP wrapper around an existing API" as obvious. NextOne is neither: it is a stateful, multi-turn add-on whose server enforces rules. It matches the track's "Creative" example "context-aware add-on that maintains state across sessions" and uses "MCP Apps" and cards from the same list.
-- **Versus what Alexa+ already does, and what the host model may already do.** I checked each on 2026-10-16.
-
-| Existing option | What it does | What NextOne adds | Source |
-|---|---|---|---|
-| Alexa+ reminders and task list (Amazon) | Snooze: "Snooze reminder for 20 minutes" | Snooze moves one reminder; NextOne re-plans every later block around fixed events | https://www.amazon.com/gp/help/customer/display.html?nodeId=T30e4eImkYHXKiYbvr |
-| Alexa+ follow-up reminders (Amazon) | "Alexa sends you reminder notifications every hour or day until you confirm that you've completed the task." | The confirmation is your word; NextOne does not record done without a photo, file, link or third_party reference | same page |
-| Alexa+ calendar and summaries (Amazon) | "meaningful summaries of your day, helps you schedule events when everyone is free" | That page describes no re-plan after a delay; NextOne answers "what is next" with previews and re-plans on "I'm late" | https://www.aboutamazon.com/news/devices/new-alexa-plus-amazon-devices |
-| Motion (third-party review) | Reported to reschedule the day automatically when you fall behind | Not an Alexa+ add-on; no proof requirement for done | https://www.morgen.so/blog-posts/motion-review |
-| Host LLM default capability | Unknown: I found no page saying the Alexa+ model re-plans a day or asks for proof | The server enforces both, so it does not depend on the host model | none (no source found) |
-
 - **Honest limit.** Snooze plus follow-up already covers a late single task. Other entries in this hackathon also gate state changes on evidence. NextOne's claim is narrower: the whole-day re-plan with a checkable invariant, together with the evidence rule.
 
 ## Friction log and feedback

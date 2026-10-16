@@ -24,8 +24,10 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 4. Persistence: state written by server A is read by a freshly started server B (restart test) with identical next-up result.
 5. Card limits: every card from every tool has title 1, fields <= 2, action 1.
 6. Host simulator: scripted 5-utterance scenario (what now / late / done without proof / done with proof / what now) passes end-to-end through the real server; free-text input box exists (id=utterance).
-7. Doc hygiene: README/docs/host contain no Hangul, no internal-trace tokens; every number in README equals docs/metrics.json (script exit 0).
+7. Doc hygiene: README/docs/host contain no Hangul, no internal-trace tokens (see 10); every number in README equals docs/metrics.json (script exit 0).
 8. Test count >= 40, all green, zero dependencies.
+9. Throughput limit: `npm run bench` drives real concurrent MCP calls at concurrency 1, 4, 16, 64, 256 against the real server and writes calls per second and p50/p95 per level to docs/metrics.json; it reports the peak calls per second, the first concurrency where p95 is more than 3x the p95 at concurrency 1 (the knee), and the highest tested concurrency whose p95 stays under the 500 ms round-trip limit (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html). Zero errors at every level. README and description quote these generated values.
+10. Language and traces: every public file (README, SPEC, docs/*.md, package.json, LICENSE, host/, src/, scripts/) has zero Hangul and zero internal traces (note-system links and paths, absolute home paths, task markers, the author's tooling names; the exact patterns are in scripts/lib/docs-checks.js); tests under test/ hold no Hangul either (test/docs-english.test.js).
 
 ## Given / When / Then
 - Given a day with blocks A 09:00-10:00 (flexible), B 10:00-11:00 (fixed), C 11:00-12:00 (flexible); When user is 30 min late for A at 09:00; Then A is 09:30-10:30 would overlap B, so A moves after B (11:00-12:00) and C moves to 12:00-13:00; B unchanged; overlap minutes 0.
@@ -41,7 +43,7 @@ Real Alexa+ device or account (not used: the rules say "Alternatively, entrants 
 src/domain (pure) <- src/application (use cases, card presenter) <- src/adapters (MCP JSON-RPC) <- src/infrastructure (HTTP server, file store). No reverse imports (test/architecture.test.js enforces).
 
 ## UI acceptance criteria
-- Contrast >= 4.5:1 in light and dark for all text and buttons (checked with the vault UI audit: 0 failures).
+- Contrast >= 4.5:1 in light and dark for all text and buttons (checked with an automated UI audit: 0 failures).
 - Touch targets >= 44 px tall; body text 16 px; one font family; no external CSS, JS or fonts.
 - Every input has a visible label; the utterance box is reachable and usable by keyboard alone.
 - Card: one title, at most two fields, one action; the same layout works at 360 px width without horizontal scroll.

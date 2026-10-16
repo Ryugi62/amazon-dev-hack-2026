@@ -4,8 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-export function renderReadme() {
-  const tpl = readFileSync(join(root, 'docs', 'README.tpl.md'), 'utf8');
+export function renderTemplate(name) {
+  const tpl = readFileSync(join(root, 'docs', name), 'utf8');
   const metrics = JSON.parse(readFileSync(join(root, 'docs', 'metrics.json'), 'utf8'));
   return tpl.replace(/\{\{([a-z0-9_.]+)\}\}/g, (_, path) => {
     const v = path.split('.').reduce((o, k) => o?.[k], metrics);
@@ -13,5 +13,10 @@ export function renderReadme() {
     return String(v);
   });
 }
+export const renderReadme = () => renderTemplate('README.tpl.md');
+export const renderDescription = () => renderTemplate('description.tpl.md');
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) writeFileSync(join(root, 'README.md'), renderReadme());
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  writeFileSync(join(root, 'README.md'), renderReadme());
+  writeFileSync(join(root, 'docs', 'description.md'), renderDescription());
+}

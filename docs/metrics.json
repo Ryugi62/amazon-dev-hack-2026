@@ -12,12 +12,65 @@
     "calls": 200,
     "p50_ms": 1.7,
     "p95_ms": 2.3,
-    "max_ms": 2.9,
+    "max_ms": 3.1,
     "limit_ms": 500
   },
+  "throughput": {
+    "limit_ms": 500,
+    "levels": [
+      {
+        "concurrency": 1,
+        "calls": 600,
+        "errors": 0,
+        "calls_per_second": 319,
+        "p50_ms": 2.8,
+        "p95_ms": 5.1,
+        "max_ms": 7.8
+      },
+      {
+        "concurrency": 4,
+        "calls": 600,
+        "errors": 0,
+        "calls_per_second": 1633,
+        "p50_ms": 2.6,
+        "p95_ms": 3.2,
+        "max_ms": 3.9
+      },
+      {
+        "concurrency": 16,
+        "calls": 600,
+        "errors": 0,
+        "calls_per_second": 3148,
+        "p50_ms": 4.7,
+        "p95_ms": 7.7,
+        "max_ms": 17.2
+      },
+      {
+        "concurrency": 64,
+        "calls": 600,
+        "errors": 0,
+        "calls_per_second": 3253,
+        "p50_ms": 8.8,
+        "p95_ms": 112.3,
+        "max_ms": 176.5
+      },
+      {
+        "concurrency": 256,
+        "calls": 600,
+        "errors": 0,
+        "calls_per_second": 2731,
+        "p50_ms": 8.2,
+        "p95_ms": 196.4,
+        "max_ms": 207.4
+      }
+    ],
+    "peak_calls_per_second": 3253,
+    "knee_concurrency": 64,
+    "max_concurrency_under_limit": 256
+  },
   "tests": {
-    "tests": 91,
-    "passed": 91,
-    "failed": 0
+    "tests": 102,
+    "passed": 98,
+    "failed": 4
   }
 }

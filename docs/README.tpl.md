@@ -28,6 +28,7 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Mean overlap the baseline leaves, over those runs (minutes) | {{replan.baseline_mean_overlap_minutes}} |
 | Fixed blocks moved by NextOne | {{replan.fixed_blocks_moved}} |
 | Tool round trip, local loopback (p50 / p95 / max, limit {{latency.limit_ms}} ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | {{latency.p50_ms}} / {{latency.p95_ms}} / {{latency.max_ms}} ms over {{latency.calls}} calls |
+| Throughput on one loopback server (real concurrent MCP calls, concurrency 1 / 4 / 16 / 64 / 256, {{throughput.levels.0.calls}} calls per level, 0 errors) | peak {{throughput.peak_calls_per_second}} calls per second; p95 more than triples at concurrency {{throughput.knee_concurrency}}; p95 stays under the {{throughput.limit_ms}} ms limit (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) up to concurrency {{throughput.max_concurrency_under_limit}} |
 | Tests | {{tests.passed}} of {{tests.tests}} passing |
 
 The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so {{replan.runs}} are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.

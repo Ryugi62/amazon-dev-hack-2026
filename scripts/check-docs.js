@@ -7,7 +7,7 @@ const problems = [];
 if (checkLanguage().length) problems.push(`non-English text in: ${checkLanguage().join(', ')}`);
 if (checkInternalTraces().length) problems.push(`internal traces: ${checkInternalTraces().join('; ')}`);
 if (checkUnrenderedPlaceholders().length) problems.push(`unrendered {{placeholder}} in: ${checkUnrenderedPlaceholders().join(', ')}`);
-if (!checkReadmeMatchesMetrics()) problems.push('README.md differs from docs/README.tpl.md + docs/metrics.json (run npm run bench, then node scripts/build-readme.js)');
+if (!checkReadmeMatchesMetrics()) problems.push('README.md or docs/description.md differs from its .tpl.md + docs/metrics.json (run npm run bench, then node scripts/build-readme.js)');
 if (frictionEntries() < 5) problems.push('friction log has fewer than 5 entries');
 const out = spawnSync('sh', ['-c', 'node --test test/*.test.js 2>&1'], { cwd: root, encoding: 'utf8' }).stdout;
 const actual = Number(/ℹ tests (\d+)/.exec(out)?.[1]);
