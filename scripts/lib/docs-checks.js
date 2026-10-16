@@ -21,6 +21,10 @@ export function checkInternalTraces() {
 export function checkReadmeMatchesMetrics() {
   return read('README.md') === renderReadme();
 }
+// A leftover {{name}} means the template was not rendered (the template itself is the only file allowed to hold them).
+export function checkUnrenderedPlaceholders() {
+  return PUBLIC_FILES.filter((f) => f !== 'docs/README.tpl.md' && /\{\{/.test(read(f)));
+}
 export function frictionEntries() {
   return read('docs/friction-log.md').split('\n').filter((l) => /^\| \d+ \|/.test(l)).length;
 }

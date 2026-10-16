@@ -18,14 +18,14 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 
 | Measured by `npm run bench` | Value |
 |---|---|
-| Seeded random days with a late event | {{replan.runs}} |
+| Seeded random days with a late event (counted) | {{replan.runs}} of 1000 generated |
 | Runs where NextOne leaves any overlap | {{replan.nextone_overlap_runs}} |
 | Runs where the shift-only baseline leaves overlap | {{replan.baseline_overlap_runs}} ({{replan.baseline_overlap_percent}}%) |
 | Fixed blocks moved by NextOne | {{replan.fixed_blocks_moved}} |
 | Tool round trip, local loopback (p50 / p95 / max, limit {{latency.limit_ms}} ms) | {{latency.p50_ms}} / {{latency.p95_ms}} / {{latency.max_ms}} ms over {{latency.calls}} calls |
 | Tests | {{tests.passed}} of {{tests.tests}} passing |
 
-These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
+The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so {{replan.runs}} are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
 
 ## Required technology and where it is used
 | API / SDK | Used for | File |

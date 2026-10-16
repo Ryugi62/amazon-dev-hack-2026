@@ -18,14 +18,14 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 
 | Measured by `npm run bench` | Value |
 |---|---|
-| Seeded random days with a late event | 751 |
+| Seeded random days with a late event (counted) | 751 of 1000 generated |
 | Runs where NextOne leaves any overlap | 0 |
 | Runs where the shift-only baseline leaves overlap | 542 (72.2%) |
 | Fixed blocks moved by NextOne | 0 |
-| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms) | {{latency.p50_ms}} / {{latency.p95_ms}} / 2.8 ms over 200 calls |
+| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms) | 1.7 / 2.1 / 2.8 ms over 200 calls |
 | Tests | 73 of 73 passing |
 
-These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
+The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so 751 are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
 
 ## Required technology and where it is used
 | API / SDK | Used for | File |
