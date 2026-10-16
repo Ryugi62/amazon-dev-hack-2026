@@ -7,8 +7,12 @@ Alexa+ track, Build, Ship, Shape: Amazon Developer Hackathon. Zero dependencies,
 ## What it does
 - "What should I do now?" returns **one** block plus **two** previews, on one card.
 - "I'm 40 minutes late" rebuilds the rest of the day. No two blocks share a minute, fixed events (a lecture, a dinner) never move, and anything that no longer fits is marked *deferred*, never *done*.
-- "I did it" is **not recorded**. Done needs proof: a photo, a file, a link or a device signal.
+- "I did it" is **not recorded**. Done needs proof: a photo, a file, a link or a `third_party` reference (a sensor, device or receipt id).
 - State survives across sessions (file store; restart test included).
+
+## Evidence: where it comes from and what counts
+Where evidence comes from: the Alexa+ host model passes `evidence: {kind, ref}` as an argument of the `complete_block` tool; the server never reads a camera, an Echo sensor or any device itself. In the simulated host, `photo X`, `file X`, `link https://...` or `device|sensor|receipt X` in the sentence become the `ref`; whether a real Echo or app would supply it is not tested here.
+A valid ref is: `kind` is one of `photo`, `file`, `link`, `third_party` and `ref` is a non-empty string after trimming. The server does not open or verify what the ref points to (`isValidEvidence` in `src/domain/schedule.js`).
 
 ## What is different from what Alexa+ already does
 See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
@@ -22,8 +26,8 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Runs where NextOne leaves any overlap | 0 |
 | Runs where the shift-only baseline leaves overlap | 542 (72.2%) |
 | Fixed blocks moved by NextOne | 0 |
-| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 2.1 / 2.8 ms over 200 calls |
-| Tests | 73 of 73 passing |
+| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 2.6 / 3.3 ms over 200 calls |
+| Tests | 82 of 82 passing |
 
 The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so 751 are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
 

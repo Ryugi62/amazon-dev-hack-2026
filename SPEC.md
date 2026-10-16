@@ -10,7 +10,7 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 - Day: one calendar date with Blocks. Block: titled interval [start, end) in minutes since midnight.
 - Fixed block: cannot be moved (class, appointment). Flexible block: can be pushed later.
 - Status: planned, done, skipped, deferred (did not fit before day end; never counted as done).
-- Evidence: {kind, ref}. kind in photo, file, link, third_party. self_report is NOT evidence.
+- Evidence: {kind, ref}. kind in photo, file, link, third_party (third_party = a sensor, device or receipt reference; this is the only name for it everywhere). self_report is NOT evidence.
 - Next-up: first planned Block whose end is after now, plus the next two (preview).
 - Running late: the current Block starts later by N minutes; later flexible Blocks are pushed.
 - Overlap minutes: sum of minutes covered by two or more Blocks.

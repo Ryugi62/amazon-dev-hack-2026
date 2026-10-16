@@ -35,3 +35,15 @@ test('docs: every README / SPEC line with "500 ms" or "2025-11-25" carries a sou
     }
   }
 });
+
+test('docs: one evidence term, third_party, in docs and user-facing strings (no "device signal")', () => {
+  for (const f of [...PUBLIC_FILES, 'src/domain/schedule.js', 'src/application/presenter.js', 'src/application/service.js']) assert.doesNotMatch(read(f), /device signal/i, f);
+  assert.match(read('README.md'), /third_party/);
+  assert.match(read('SPEC.md'), /third_party/);
+});
+test('docs: README says where evidence enters and what makes a ref valid', () => {
+  const t = read('README.md');
+  assert.match(t, /Where evidence comes from:/);
+  assert.match(t, /A valid ref is:/);
+});
+test('docs: comparison names the host LLM baseline row', () => assert.match(read('docs/comparison.md'), /Host LLM default capability/));

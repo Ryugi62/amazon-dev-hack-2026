@@ -6,7 +6,7 @@ import { cards } from './presenter.js';
 export const RULES = [
   'No overlaps: a re-plan never leaves two blocks on the same minutes.',
   'Fixed blocks never move; flexible ones jump past them.',
-  'Done needs evidence (photo, file, link or device signal). Saying "I did it" is not evidence.',
+  'Done needs evidence (photo, file, link or third_party signal). Saying "I did it" is not evidence.',
 ];
 
 const realClock = () => {

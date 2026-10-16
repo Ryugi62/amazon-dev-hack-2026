@@ -94,7 +94,7 @@ export function completeBlock(blocks, id, evidence) {
   const block = find(blocks, id);
   if (block.status !== 'planned') throw new DomainError('not_planned', `${block.title} is already ${block.status}.`);
   if (!isValidEvidence(evidence)) {
-    throw new DomainError('evidence_required', 'Done needs proof: a photo, a file, a link or a device signal. Saying it out loud is not proof.');
+    throw new DomainError('evidence_required', 'Done needs proof: a photo, a file, a link or a third_party signal. Saying it out loud is not proof.');
   }
   return blocks.map((b) => (b.id === id ? { ...b, status: 'done', evidence: { kind: evidence.kind, ref: evidence.ref.trim() } } : b));
 }

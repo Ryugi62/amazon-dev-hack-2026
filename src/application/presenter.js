@@ -47,7 +47,7 @@ export const cards = {
     const tool = error.code === 'evidence_required' ? 'complete_block' : 'get_next_up';
     const label = error.code === 'evidence_required' ? 'Add proof' : "What's next?";
     const title = error.code === 'evidence_required' ? 'Not recorded' : 'Could not do that';
-    const field = error.code === 'evidence_required' ? 'Needs a photo, file, link or device signal' : error.message.slice(0, 90);
+    const field = error.code === 'evidence_required' ? 'Needs a photo, file, link or third_party signal' : error.message.slice(0, 90);
     return card(title, [field], { label, tool });
   },
 };

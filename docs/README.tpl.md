@@ -7,8 +7,12 @@ Alexa+ track, Build, Ship, Shape: Amazon Developer Hackathon. Zero dependencies,
 ## What it does
 - "What should I do now?" returns **one** block plus **two** previews, on one card.
 - "I'm 40 minutes late" rebuilds the rest of the day. No two blocks share a minute, fixed events (a lecture, a dinner) never move, and anything that no longer fits is marked *deferred*, never *done*.
-- "I did it" is **not recorded**. Done needs proof: a photo, a file, a link or a device signal.
+- "I did it" is **not recorded**. Done needs proof: a photo, a file, a link or a `third_party` reference (a sensor, device or receipt id).
 - State survives across sessions (file store; restart test included).
+
+## Evidence: where it comes from and what counts
+Where evidence comes from: the Alexa+ host model passes `evidence: {kind, ref}` as an argument of the `complete_block` tool; the server never reads a camera, an Echo sensor or any device itself. In the simulated host, `photo X`, `file X`, `link https://...` or `device|sensor|receipt X` in the sentence become the `ref`; whether a real Echo or app would supply it is not tested here.
+A valid ref is: `kind` is one of `photo`, `file`, `link`, `third_party` and `ref` is a non-empty string after trimming. The server does not open or verify what the ref points to (`isValidEvidence` in `src/domain/schedule.js`).
 
 ## What is different from what Alexa+ already does
 See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
