@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { DomainError } from '../domain/errors.js';
+import { parseIcs } from './ics.js';
 
 // MCP JSON-RPC adapter (spec 2025-11-25). Pure: takes a message, returns a response or null.
 export const PROTOCOL_VERSION = '2025-11-25';
@@ -28,6 +30,17 @@ const buildTools = (ui) => [
   { name: 'add_block', description: 'Add a block (HH:MM start and end). Rejected if it overlaps an existing block.',
     inputSchema: { type: 'object', properties: { title: { type: 'string' }, start: { type: 'string' }, end: { type: 'string' }, fixed: { type: 'boolean' } }, required: ['title', 'start', 'end'] }, _meta: ui,
     run: (s, a) => s.addBlock({ title: a.title, start: a.start, end: a.end, fixed: a.fixed }) },
+  { name: 'import_calendar', description: "Read a standard calendar file (.ics text from the user's own device) and make its timed events the day's fixed blocks. Nothing is uploaded; the text is read here and only the blocks are kept.",
+    inputSchema: { type: 'object', properties: { ics: { type: 'string', description: 'Contents of an .ics file.' }, date: { type: 'string', description: 'Optional day, YYYY-MM-DD. Default: the earliest event date in the file.' } }, required: ['ics'] }, _meta: ui,
+    run: (s, a) => {
+      try {
+        const parsed = parseIcs(a.ics, { date: a.date });
+        return s.importCalendar({ events: parsed.events, skipped: parsed.skipped, date: parsed.date });
+      } catch (e) {
+        if (e instanceof DomainError) return s.fail(e);
+        throw e;
+      }
+    } },
   { name: 'get_today', description: "Today's blocks with status, overlap minutes and the honest-completion rate.",
     inputSchema: { type: 'object', properties: {} }, _meta: ui, run: (s) => s.getToday() },
   { name: 'get_rules', description: 'The three rules NextOne enforces.',
@@ -80,7 +93,7 @@ export function createMcpHandler({ service, cardHtml }) {
           const args = params.arguments ?? {};
           const bad = validateArgs(tool, args);
           if (bad) return err(id, -32602, bad);
-          const r = tool.run(service, args);
+          const r = await tool.run(service, args);
           const text = r.ok ? `${r.card.title}. ${r.card.fields.join('. ')}.` : `${r.card.title}. ${r.error.message}`;
           const result = { content: [{ type: 'text', text }], structuredContent: r.ok ? { data: r.data, card: r.card } : { error: r.error, card: r.card } };
           if (!r.ok) result.isError = true;

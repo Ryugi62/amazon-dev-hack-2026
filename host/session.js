@@ -11,3 +11,10 @@ export async function runTurn(client, ctx, text) {
   if (plan.tool === 'get_next_up' && !result.isError) ctx.currentBlockId = sc.data.next ? sc.data.next.id : null;
   return { reply: result.content[0].text, card: sc.card, tool: plan.tool, args, isError: Boolean(result.isError) };
 }
+
+// Calendar import: the file was read on the user's own device (browser file picker); only its text goes to the local server.
+export async function runImport(client, icsText) {
+  const result = await client.callTool('import_calendar', { ics: icsText });
+  const sc = result.structuredContent;
+  return { reply: result.content[0].text, card: sc.card, isError: Boolean(result.isError) };
+}

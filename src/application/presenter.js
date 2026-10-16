@@ -27,7 +27,7 @@ export const cards = {
     return card(`Re-planned for ${minutes} min late`, [`${moved} moved${tail}`, `${overlapMinutes} overlaps`], { label: "What's next?", tool: 'get_next_up' });
   },
   completed(block) {
-    return card(`Done: ${block.title}`, [`Proof: ${block.evidence.kind}`], { label: "What's next?", tool: 'get_next_up' });
+    return card(`Done: ${block.title}`, [block.evidence.verified?.status === 'confirmed' ? `Proof: ${block.evidence.kind}, confirmed` : `Proof: ${block.evidence.kind}`], { label: "What's next?", tool: 'get_next_up' });
   },
   skipped(block) {
     return card(`Skipped: ${block.title}`, ['Not counted as done'], { label: "What's next?", tool: 'get_next_up' });
@@ -40,13 +40,19 @@ export const cards = {
     const done = blocks.filter((b) => b.status === 'done').length;
     return card('Today', [`${open} planned`, `${done} done with proof`], { label: "What's next?", tool: 'get_next_up' });
   },
+  imported({ blocks, rejected, skipped }) {
+    const left = rejected.length + skipped.length;
+    const first = blocks[0];
+    return card(`Imported ${blocks.length} fixed events`, [`First: ${first.title}, ${range(first)}`, left ? `${left} left out` : 'None left out'], { label: "What's next?", tool: 'get_next_up' });
+  },
   rules(rules) {
     return card('How NextOne works', [rules[0], rules[1]], { label: "What's next?", tool: 'get_next_up' });
   },
   failure(error) {
-    const tool = error.code === 'evidence_required' ? 'complete_block' : 'get_next_up';
-    const label = error.code === 'evidence_required' ? 'Add proof' : "What's next?";
-    const title = error.code === 'evidence_required' ? 'Not recorded' : 'Could not do that';
+    const proof = error.code === 'evidence_required' || error.code === 'evidence_unverified';
+    const tool = proof ? 'complete_block' : 'get_next_up';
+    const label = proof ? 'Add proof' : "What's next?";
+    const title = proof ? 'Not recorded' : 'Could not do that';
     const field = error.code === 'evidence_required' ? 'Needs a photo, file, link or third_party signal' : error.message.slice(0, 90);
     return card(title, [field], { label, tool });
   },

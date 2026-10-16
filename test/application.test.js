@@ -38,19 +38,19 @@ test('reportRunningLate: state is saved, next getNextUp reflects the move', () =
   assert.equal(after.id, before.id);
   assert.equal(after.start, before.start + 30);
 });
-test('completeBlock without evidence: ok=false, code evidence_required, card shows what is needed', () => {
+test('completeBlock without evidence: ok=false, code evidence_required, card shows what is needed', async () => {
   const s = make();
   const id = s.getNextUp({ now: T('08:00') }).data.next.id;
-  const r = s.completeBlock({ blockId: id });
+  const r = await s.completeBlock({ blockId: id });
   assert.equal(r.ok, false);
   assert.equal(r.error.code, 'evidence_required');
   assert.equal(validateCard(r.card).ok, true);
   assert.equal(s.getToday().data.blocks.find((b) => b.id === id).status, 'planned');
 });
-test('completeBlock with evidence: done, next advances', () => {
+test('completeBlock with evidence: done, next advances', async () => {
   const s = make();
   const id = s.getNextUp({ now: T('08:00') }).data.next.id;
-  const r = s.completeBlock({ blockId: id, evidence: { kind: 'photo', ref: 'desk.jpg' } });
+  const r = await s.completeBlock({ blockId: id, evidence: { kind: 'photo', ref: 'desk.jpg' } });
   assert.equal(r.ok, true);
   assert.notEqual(s.getNextUp({ now: T('08:00') }).data.next.id, id);
 });
@@ -76,12 +76,12 @@ test('getRules: lists the three invariants', () => {
   assert.equal(r.data.rules.length, 3);
   assert.equal(validateCard(r.card).ok, true);
 });
-test('every use case returns a valid card (success and failure)', () => {
+test('every use case returns a valid card (success and failure)', async () => {
   const s = make();
   const results = [
     s.getNextUp({ now: T('08:00') }), s.getToday(), s.getRules(),
     s.reportRunningLate({ minutes: 20, now: T('08:00') }),
-    s.completeBlock({ blockId: 'nope' }),
+    await s.completeBlock({ blockId: 'nope' }),
     s.addBlock({ title: 'x', start: '10:30', end: '11:00' }),
     s.reportRunningLate({ minutes: 0 }),
     s.getNextUp({ now: T('23:59') }),

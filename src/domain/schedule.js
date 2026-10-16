@@ -90,13 +90,30 @@ function find(blocks, id) {
   return block;
 }
 
-export function completeBlock(blocks, id, evidence) {
+const NEXT_STEP = {
+  link: 'Check that the link opens, then say it again.',
+  photo: 'Put the photo in the evidence folder, then say it again.',
+  file: 'Put the file in the evidence folder, then say it again.',
+  third_party: 'Send a reference the sensor, device or receipt gave you, then say it again.',
+};
+
+// `verification` is the outcome of checking the ref (made by an adapter; the domain does no I/O).
+// undefined = no verifier configured (shape check only); otherwise ok must be true.
+export function completeBlock(blocks, id, evidence, verification) {
   const block = find(blocks, id);
   if (block.status !== 'planned') throw new DomainError('not_planned', `${block.title} is already ${block.status}.`);
   if (!isValidEvidence(evidence)) {
     throw new DomainError('evidence_required', 'Done needs proof: a photo, a file, a link or a third_party signal. Saying it out loud is not proof.');
   }
-  return blocks.map((b) => (b.id === id ? { ...b, status: 'done', evidence: { kind: evidence.kind, ref: evidence.ref.trim() } } : b));
+  if (verification !== undefined && !verification.ok) {
+    throw new DomainError('evidence_unverified', `Not confirmed: ${verification.reason ?? 'the proof could not be checked'}. ${NEXT_STEP[evidence.kind]}`);
+  }
+  const stored = { kind: evidence.kind, ref: evidence.ref.trim() };
+  if (verification !== undefined) {
+    const { ok, reason, ...facts } = verification;
+    stored.verified = facts;
+  }
+  return blocks.map((b) => (b.id === id ? { ...b, status: 'done', evidence: stored } : b));
 }
 
 export function skipBlock(blocks, id) {
@@ -109,4 +126,19 @@ export function honestCompletionRate(blocks) {
   const done = blocks.filter((b) => b.status === 'done');
   if (done.length === 0) return 1;
   return done.filter((b) => isValidEvidence(b.evidence)).length / done.length;
+}
+
+// Fixed events imported from a calendar become fixed blocks. Events that overlap an earlier one are
+// dropped and reported, because a fixed block can never move and two of them on the same minutes would break the zero-overlap rule.
+export function fixedBlocksFromEvents(events) {
+  const ordered = [...events].sort((a, b) => a.start - b.start || a.end - b.end);
+  const blocks = [];
+  const rejected = [];
+  for (const ev of ordered) {
+    const clash = blocks.find((b) => b.start < ev.end && ev.start < b.end);
+    if (clash) { rejected.push({ title: ev.title, reason: `overlaps ${clash.title}` }); continue; }
+    const id = `cal${blocks.length + 1}-${String(ev.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 20)}`;
+    blocks.push(createBlock({ id, title: ev.title, start: ev.start, end: ev.end, fixed: true }));
+  }
+  return { blocks, rejected };
 }

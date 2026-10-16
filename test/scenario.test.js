@@ -23,9 +23,24 @@ test('3-minute demo scenario: 5 utterances end to end through the real server', 
     assert.equal(turns[2].isError, true);
     assert.equal(turns[2].card.title, 'Not recorded');
     assert.equal(turns[3].isError, false);
-    assert.equal(turns[3].card.fields[0], 'Proof: photo');
+    assert.equal(turns[3].card.fields[0], 'Proof: photo, confirmed');
     assert.notEqual(turns[4].card.title, turns[0].card.title);
     for (const t of turns) assert.equal(validateCard(t.card).ok, true);
+  } finally { await s.close(); }
+});
+test('end to end: a photo that is not in the evidence folder is refused and the block stays planned', async () => {
+  const s = await startServer({ port: 0, storePath: join(mkdtempSync(join(tmpdir(), 'nextone-')), 's.json') });
+  try {
+    const client = new McpClient({ baseUrl: s.url });
+    await client.initialize();
+    const ctx = { now: '08:30', currentBlockId: null };
+    await runTurn(client, ctx, 'what should I do now?');
+    const t = await runTurn(client, ctx, 'done, photo not-taken.jpg');
+    assert.equal(t.isError, true);
+    assert.equal(t.card.title, 'Not recorded');
+    assert.match(t.card.fields[0], /Not confirmed/);
+    const today = await client.callTool('get_today', {});
+    assert.equal(today.structuredContent.data.blocks.find((b) => b.id === ctx.currentBlockId).status, 'planned');
   } finally { await s.close(); }
 });
 test('client re-initializes transparently after a server restart (session 404)', async () => {

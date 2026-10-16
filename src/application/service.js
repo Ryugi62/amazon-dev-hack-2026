@@ -1,4 +1,4 @@
-import { DomainError, addBlock, completeBlock, createBlock, honestCompletionRate, nextUp, overlapMinutes, runLate, skipBlock } from '../domain/schedule.js';
+import { DomainError, addBlock, completeBlock, createBlock, fixedBlocksFromEvents, honestCompletionRate, isValidEvidence, nextUp, overlapMinutes, runLate, skipBlock } from '../domain/schedule.js';
 import { parseHHMM } from '../domain/time.js';
 import { demoDay } from './demoDay.js';
 import { cards } from './presenter.js';
@@ -14,7 +14,7 @@ const realClock = () => {
   return d.getHours() * 60 + d.getMinutes();
 };
 
-export function createService({ store, userId = 'demo', clock = realClock }) {
+export function createService({ store, userId = 'demo', clock = realClock, verifyEvidence = null }) {
   const load = () => store.load(userId) ?? demoDay();
   const save = (state) => store.save(userId, state);
   const at = (now) => (now === undefined ? clock() : typeof now === 'number' ? now : parseHHMM(now));
@@ -44,10 +44,19 @@ export function createService({ store, userId = 'demo', clock = realClock }) {
         return { ok: true, data, card: cards.rescheduled(data) };
       });
     },
-    completeBlock({ blockId, evidence } = {}) {
+    // Async because the proof is checked for real (verifyEvidence port: URL status, file size and hash).
+    async completeBlock({ blockId, evidence } = {}) {
+      let verification;
+      if (verifyEvidence && isValidEvidence(evidence)) {
+        try {
+          verification = await verifyEvidence(evidence);
+        } catch (e) {
+          verification = { ok: false, reason: 'the check itself failed' };
+        }
+      }
       return guard(() => {
         const state = load();
-        const blocks = completeBlock(state.blocks, blockId, evidence);
+        const blocks = completeBlock(state.blocks, blockId, evidence, verification);
         save({ ...state, blocks });
         const block = blocks.find((b) => b.id === blockId);
         return { ok: true, data: { block, honestCompletionRate: honestCompletionRate(blocks) }, card: cards.completed(block) };
@@ -71,6 +80,19 @@ export function createService({ store, userId = 'demo', clock = realClock }) {
         save({ ...state, blocks });
         return { ok: true, data: { block }, card: cards.added(block) };
       });
+    },
+    // Fixed events from a calendar file become the day's fixed blocks (the demo day is replaced). Parsing happens in an adapter.
+    importCalendar({ events, skipped = [], date } = {}) {
+      return guard(() => {
+        const { blocks, rejected } = fixedBlocksFromEvents(events ?? []);
+        if (blocks.length === 0) throw new DomainError('empty_calendar', 'No timed events were found for that day. Pick another date or export a different .ics file.');
+        save({ date: date ?? 'imported', blocks });
+        const data = { date, blocks, rejected, skipped };
+        return { ok: true, data, card: cards.imported(data) };
+      });
+    },
+    fail(error) {
+      return guard(() => { throw error; });
     },
     getToday() {
       return guard(() => {

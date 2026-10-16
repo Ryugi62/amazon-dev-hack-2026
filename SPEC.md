@@ -10,7 +10,7 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 - Day: one calendar date with Blocks. Block: titled interval [start, end) in minutes since midnight.
 - Fixed block: cannot be moved (class, appointment). Flexible block: can be pushed later.
 - Status: planned, done, skipped, deferred (did not fit before day end; never counted as done).
-- Evidence: {kind, ref}. kind in photo, file, link, third_party (third_party = a sensor, device or receipt reference; this is the only name for it everywhere). self_report is NOT evidence.
+- Evidence: {kind, ref} plus, once checked, verified {status, httpStatus or bytes and sha256, checkedAt}. kind in photo, file, link, third_party (third_party = a sensor, device or receipt reference; this is the only name for it everywhere). self_report is NOT evidence.
 - Next-up: first planned Block whose end is after now, plus the next two (preview).
 - Running late: the current Block starts later by N minutes; later flexible Blocks are pushed.
 - Overlap minutes: sum of minutes covered by two or more Blocks.
@@ -20,7 +20,8 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 ## Success conditions (numbers)
 1. MCP: real HTTP client completes initialize -> tools/list -> tools/call; tools/list returns >= 6 tools; protocolVersion 2025-11-25 (rules: "implementing MCP spec version 2025-11-25", https://amazonappdev2026.devpost.com/rules section 4; quickstart: "The MCP specification (2025-11-25) deprecated the standalone HTTP+SSE transport", https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html); the card resource (ui://nextone/card-<content hash>.html) is readable as text/html;profile=mcp-app, speaks the MCP Apps bridge (ui/initialize, hostContext, tool-result), and every tool round trip stays under 500 ms (quickstart: "Your MCP server must meet a round-trip query response latency of less than 500 ms", https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html).
 2. Re-plan: over 1000 seeded random days x late 5..120 min, overlap minutes after re-plan = 0 in 100% of runs; fixed blocks moved = 0; naive shift-only baseline leaves overlap in >= 20% of the same runs (measured, written to docs/metrics.json).
-3. Evidence rule: 100% of 'done' requests without valid Evidence are rejected; honest-completion rate = 100% after any operation sequence (property test, 500 sequences).
+3. Evidence rule: 100% of 'done' requests without valid Evidence are rejected; honest-completion rate = 100% after any operation sequence (property test, 500 sequences). The ref is checked for real: a link must answer HTTP 200 (HEAD, GET fallback, 400 ms timeout), a photo or file must exist in the evidence folder with size and sha256 recorded; a failed, timed-out or unreachable check refuses 'done' with a next step (tests use a local HTTP server).
+11. Calendar import: an .ics file (DTEND or DURATION, folded lines, daily and weekly repeats, UTC) becomes fixed blocks; the re-plan then keeps zero overlaps and moves no imported fixed block; a double-booked event is dropped and reported; the file text is never stored (tests with the synthetic sample).
 4. Persistence: state written by server A is read by a freshly started server B (restart test) with identical next-up result.
 5. Card limits: every card from every tool has title 1, fields <= 2, action 1.
 6. Host simulator: scripted 5-utterance scenario (what now / late / done without proof / done with proof / what now) passes end-to-end through the real server; free-text input box exists (id=utterance).
@@ -37,7 +38,7 @@ Why it is not an existing feature (track "Obvious" list: single-turn Q&A, basic 
 - Given server restarted; When get_next_up; Then same answer as before restart.
 
 ## Non-goals
-Real Alexa+ device or account (not used: the rules say "Alternatively, entrants may submit a simulated Alexa+ experience", https://amazonappdev2026.devpost.com/rules section 4; the host here is a simulation and is labelled so everywhere). Real user data (all data synthetic). Auth, payments, model training. Natural-language understanding beyond a small rule-based stand-in for the host LLM.
+Real Alexa+ device or account (not used: the rules say "Alternatively, entrants may submit a simulated Alexa+ experience", https://amazonappdev2026.devpost.com/rules section 4; the host here is a simulation and is labelled so everywhere). Storing or uploading real user data (an .ics file is read locally on the user's device; all bundled data stays synthetic). Auth, payments, model training. Natural-language understanding beyond a small rule-based stand-in for the host LLM.
 
 ## Architecture (Clean)
 src/domain (pure) <- src/application (use cases, card presenter) <- src/adapters (MCP JSON-RPC) <- src/infrastructure (HTTP server, file store). No reverse imports (test/architecture.test.js enforces).
@@ -48,3 +49,6 @@ src/domain (pure) <- src/application (use cases, card presenter) <- src/adapters
 - Every input has a visible label; the utterance box is reachable and usable by keyboard alone.
 - Card: one title, at most two fields, one action; the same layout works at 360 px width without horizontal scroll.
 - The simulated-host banner is visible without scrolling on first load.
+
+## SPEC change history
+- 2026-10-17: Non-goal "Real user data (all data synthetic)" became "Storing or uploading real user data (an .ics file is read locally on the user's device; all bundled data stays synthetic)", so a customer's own calendar file can be imported; success conditions 3 (ref is verified) and 11 (calendar import) added.

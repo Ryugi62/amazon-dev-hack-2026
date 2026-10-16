@@ -6,6 +6,7 @@ import { dirname, join, normalize, resolve } from 'node:path';
 import { createService } from '../application/service.js';
 import { createMcpHandler } from '../adapters/mcp.js';
 import { fileStore } from './fileStore.js';
+import { createEvidenceVerifier } from './evidenceVerifier.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
@@ -20,8 +21,8 @@ const localOrigin = (origin, host) => {
   }
 };
 
-export async function startServer({ port = 3000, storePath = join(root, '.data', 'state.json'), clock } = {}) {
-  const service = createService({ store: fileStore(storePath), clock });
+export async function startServer({ port = 3000, storePath = join(root, '.data', 'state.json'), clock, evidenceDir = process.env.NEXTONE_EVIDENCE_DIR ?? join(root, 'samples', 'evidence'), verifyEvidence = createEvidenceVerifier({ evidenceDir }) } = {}) {
+  const service = createService({ store: fileStore(storePath), clock, verifyEvidence });
   const cardHtml = readFileSync(join(root, 'src', 'adapters', 'card.html'), 'utf8');
   const mcp = createMcpHandler({ service, cardHtml });
   const sessions = new Set();

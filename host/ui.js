@@ -1,5 +1,5 @@
 import { McpClient } from './client.js';
-import { runTurn } from './session.js';
+import { runTurn, runImport } from './session.js';
 import { createBridge } from './bridge.js';
 
 const $ = (id) => document.getElementById(id);
@@ -45,6 +45,19 @@ async function send(text) {
 }
 
 $('form').addEventListener('submit', (e) => { e.preventDefault(); const v = $('utterance').value; $('utterance').value = ''; if (v.trim()) send(v); });
+$('icsfile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  say('me', `Import calendar: ${file.name}`);
+  try {
+    const turn = await runImport(client, await file.text());
+    say('bot', turn.reply);
+    if (turn.card) showCard({ structuredContent: { card: turn.card } });
+  } catch (err) {
+    say('bot', `Error: ${err.message}`);
+  }
+  e.target.value = '';
+});
 document.querySelectorAll('.chips button').forEach((b) => b.addEventListener('click', () => send(b.dataset.say)));
 
 (async () => {

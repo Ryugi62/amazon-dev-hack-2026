@@ -11,8 +11,8 @@
   "latency": {
     "calls": 200,
     "p50_ms": 1.7,
-    "p95_ms": 2.3,
-    "max_ms": 3.1,
+    "p95_ms": 2.1,
+    "max_ms": 3,
     "limit_ms": 500
   },
   "throughput": {
@@ -22,55 +22,55 @@
         "concurrency": 1,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 313,
+        "calls_per_second": 315,
         "p50_ms": 2.9,
-        "p95_ms": 5.3,
-        "max_ms": 9.4
+        "p95_ms": 4.9,
+        "max_ms": 7.6
       },
       {
         "concurrency": 4,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 1434,
-        "p50_ms": 3,
-        "p95_ms": 3.8,
-        "max_ms": 8.6
+        "calls_per_second": 1513,
+        "p50_ms": 2.9,
+        "p95_ms": 3.7,
+        "max_ms": 5.6
       },
       {
         "concurrency": 16,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 3215,
-        "p50_ms": 4.8,
+        "calls_per_second": 3282,
+        "p50_ms": 4.5,
         "p95_ms": 7.8,
-        "max_ms": 15.4
+        "max_ms": 18.4
       },
       {
         "concurrency": 64,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 3164,
-        "p50_ms": 9.2,
-        "p95_ms": 113.8,
-        "max_ms": 182.3
+        "calls_per_second": 3180,
+        "p50_ms": 8.8,
+        "p95_ms": 112.8,
+        "max_ms": 180
       },
       {
         "concurrency": 256,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 2696,
-        "p50_ms": 8.2,
-        "p95_ms": 198.1,
-        "max_ms": 209.6
+        "calls_per_second": 2693,
+        "p50_ms": 9.8,
+        "p95_ms": 199.3,
+        "max_ms": 210.6
       }
     ],
-    "peak_calls_per_second": 3215,
+    "peak_calls_per_second": 3282,
     "knee_concurrency": 64,
     "max_concurrency_under_limit": 256
   },
   "tests": {
-    "tests": 103,
-    "passed": 103,
+    "tests": 129,
+    "passed": 129,
     "failed": 0
   }
 }
