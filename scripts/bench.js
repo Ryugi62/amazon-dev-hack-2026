@@ -4,38 +4,11 @@ import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { runLate, overlapMinutes } from '../src/domain/schedule.js';
-import { randomDay, naiveShift, mulberry32 } from './lib/sim.js';
+import { replanStats } from './lib/replan-stats.js';
 import { startServer } from '../src/infrastructure/server.js';
 import { McpClient } from '../host/client.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-function replanStats(runs = 1000) {
-  const rnd = mulberry32(2026);
-  let n = 0, nextOneOverlapRuns = 0, baselineOverlapRuns = 0, fixedMoved = 0, usable = 0;
-  for (let i = 0; i < runs; i += 1) {
-    const day = randomDay(rnd);
-    const minutes = 5 + Math.floor(rnd() * 116);
-    if (day[0].fixed) continue;
-    n += 1;
-    const r = runLate(day, day[0].start, minutes);
-    usable += 1;
-    if (overlapMinutes(r.blocks) > 0) nextOneOverlapRuns += 1;
-    for (const f of day.filter((b) => b.fixed)) {
-      const a = r.blocks.find((b) => b.id === f.id);
-      if (a.start !== f.start || a.end !== f.end) fixedMoved += 1;
-    }
-    if (overlapMinutes(naiveShift(day, minutes)) > 0) baselineOverlapRuns += 1;
-  }
-  return {
-    runs: n,
-    nextone_overlap_runs: nextOneOverlapRuns,
-    baseline_overlap_runs: baselineOverlapRuns,
-    baseline_overlap_percent: Math.round((1000 * baselineOverlapRuns) / n) / 10,
-    fixed_blocks_moved: fixedMoved,
-  };
-}
 
 async function latency(calls = 200) {
   const s = await startServer({ port: 0, storePath: join(mkdtempSync(join(tmpdir(), 'nextone-bench-')), 's.json') });

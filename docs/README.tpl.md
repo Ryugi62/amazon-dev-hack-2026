@@ -25,6 +25,7 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Seeded random days with a late event (counted) | {{replan.runs}} of 1000 generated |
 | Runs where NextOne leaves any overlap | {{replan.nextone_overlap_runs}} |
 | Runs where the shift-only baseline leaves overlap | {{replan.baseline_overlap_runs}} ({{replan.baseline_overlap_percent}}%) |
+| Mean overlap the baseline leaves, over those runs (minutes) | {{replan.baseline_mean_overlap_minutes}} |
 | Fixed blocks moved by NextOne | {{replan.fixed_blocks_moved}} |
 | Tool round trip, local loopback (p50 / p95 / max, limit {{latency.limit_ms}} ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | {{latency.p50_ms}} / {{latency.p95_ms}} / {{latency.max_ms}} ms over {{latency.calls}} calls |
 | Tests | {{tests.passed}} of {{tests.tests}} passing |

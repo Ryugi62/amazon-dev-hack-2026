@@ -5,18 +5,19 @@
     "nextone_overlap_runs": 0,
     "baseline_overlap_runs": 542,
     "baseline_overlap_percent": 72.2,
+    "baseline_mean_overlap_minutes": 36.3,
     "fixed_blocks_moved": 0
   },
   "latency": {
     "calls": 200,
     "p50_ms": 1.7,
-    "p95_ms": 2.6,
-    "max_ms": 3.3,
+    "p95_ms": 4,
+    "max_ms": 10.5,
     "limit_ms": 500
   },
   "tests": {
-    "tests": 82,
-    "passed": 82,
-    "failed": 0
+    "tests": 84,
+    "passed": 83,
+    "failed": 1
   }
 }
