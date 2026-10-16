@@ -1,0 +1,169 @@
+{
+ "model": "gemini-3.1-flash-lite",
+ "prompt_file": "scripts/llm-replan-prompt.txt",
+ "seed": 2026,
+ "temperature": 0,
+ "records": [
+  {
+   "index": 186,
+   "minutes": 18,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 188,
+   "minutes": 97,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 189,
+   "minutes": 76,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 190,
+   "minutes": 109,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 192,
+   "minutes": 29,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 194,
+   "minutes": 102,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 195,
+   "minutes": 112,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 196,
+   "minutes": 48,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 197,
+   "minutes": 72,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 198,
+   "minutes": 40,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 199,
+   "minutes": 102,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 200,
+   "minutes": 28,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 201,
+   "minutes": 65,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 203,
+   "minutes": 55,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 204,
+   "minutes": 8,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 205,
+   "minutes": 91,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 206,
+   "minutes": 72,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 208,
+   "minutes": 32,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 209,
+   "minutes": 11,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 210,
+   "minutes": 67,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  }
+ ],
+ "date": "2026-10-16"
+}

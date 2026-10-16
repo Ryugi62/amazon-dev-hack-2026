@@ -31,7 +31,7 @@ If a check fails, times out or the network is down, the block stays planned and 
 - A synthetic sample is in `samples/calendar/sample-day.ics`. Tests use only that file.
 
 ## What is different from what Alexa+ already does
-See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
+See [docs/comparison.md](docs/comparison.md), including a measured row for what a host model does on its own. Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
 
 ## The metric (one definition, used everywhere)
 **Overlap minutes after a late event** = minutes covered by two or more blocks once the user says "I'm N minutes late" (lower is better). Baseline: the behaviour of a reminder that only moves the late item.
@@ -48,6 +48,17 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Tests | {{tests.passed}} of {{tests.tests}} passing |
 
 The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so {{replan.runs}} are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
+
+## Versus the host model alone (measured)
+Question a judge would ask: "Would the Alexa+ model re-plan the day by itself, without this add-on?" I cannot call the Alexa+ model, so I measured a stand-in with the same seeded days as the metric above: `scripts/llm-baseline.js` gives a hosted Gemini model the day in plain language, says "I'm N minutes late, re-plan the rest of my day, do not move fixed events" (prompt text: `scripts/llm-replan-prompt.txt`, it also states no overlap, keep lengths, nothing past 24:00), parses the JSON answer and counts it with the same overlap checker NextOne is held to. Run date {{llm_replan.date}}, temperature 0, seed {{llm_replan.seed}}. Per-day scores: `docs/llm-baseline/`. Free-tier daily limits are about 20 calls per model, so each model saw a different slice of the seeded list: {{llm_replan.attempted}} calls over {{llm_replan.distinct_days}} different days.
+
+| Model | Answers scored | Days with any overlap | Mean overlap on those days (min) | Fixed events moved | Blocks lost | Fully clean answers | Calls not measured |
+|---|---|---|---|---|---|---|---|
+{{llm_replan.table_rows}}
+| **All models together** | {{llm_replan.measured}} | {{llm_replan.overlap_runs}} ({{llm_replan.overlap_percent}}%) | {{llm_replan.mean_overlap_minutes}} | {{llm_replan.fixed_blocks_moved}} in {{llm_replan.runs_with_fixed_moved}} runs | {{llm_replan.missing_blocks}} in {{llm_replan.runs_with_missing}} runs | {{llm_replan.clean_runs}} of {{llm_replan.measured}} | {{llm_replan.unmeasured}} |
+| NextOne on the same scored days | {{llm_replan.measured}} | {{llm_replan.nextone_overlap_runs}} | 0 | {{llm_replan.nextone_fixed_blocks_moved}} | {{llm_replan.nextone_deferred_blocks}} deferred, none lost | {{llm_replan.measured}} of {{llm_replan.measured}} | 0 |
+
+"Calls not measured" are failed calls (daily limit, server overload, timeout); they are counted separately and left out of every other column. How to read it: on the days that were scored, most of the models re-planned cleanly when the rules were in the prompt, so NextOne does not claim that a model cannot re-plan a day. What the table shows is that a prompt is a request: where a model slipped, the answer still arrived and nothing stopped it, whereas NextOne's server refuses such a plan on every call. Limits: these are Gemini models, not the Alexa+ model; the prompt spells out the rules; the models saw different days, so the pooled row is not a paired comparison; nothing here tests state across sessions or the proof rule for done.
 
 ## Required technology and where it is used
 | API / SDK | Used for | File |

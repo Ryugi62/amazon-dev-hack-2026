@@ -1,0 +1,108 @@
+{
+ "model": "gemini-3.8-flash",
+ "prompt_file": "scripts/llm-replan-prompt.txt",
+ "seed": 2026,
+ "temperature": 0,
+ "records": [
+  {
+   "index": 158,
+   "minutes": 60,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 159,
+   "minutes": 69,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "network"
+  },
+  {
+   "index": 160,
+   "minutes": 60,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 161,
+   "minutes": 16,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 163,
+   "minutes": 57,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 164,
+   "minutes": 19,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 165,
+   "minutes": 9,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "rate_limit"
+  },
+  {
+   "index": 166,
+   "minutes": 5,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "rate_limit"
+  },
+  {
+   "index": 167,
+   "minutes": 71,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "rate_limit"
+  },
+  {
+   "index": 168,
+   "minutes": 7,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 169,
+   "minutes": 20,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 170,
+   "minutes": 93,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  }
+ ],
+ "date": "2026-10-16"
+}

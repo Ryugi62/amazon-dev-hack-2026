@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { replanStats } from './lib/replan-stats.js';
 import { measureThroughput } from './lib/throughput.js';
+import { llmReplanMetrics } from './lib/llm-metrics.js';
 import { startServer } from '../src/infrastructure/server.js';
 import { McpClient } from '../host/client.js';
 
@@ -34,7 +35,7 @@ function testCount() {
   return { tests: get('tests'), passed: get('pass'), failed: get('fail') };
 }
 
-const metrics = { generated_by: 'scripts/bench.js', replan: replanStats(), latency: await latency(), throughput: await measureThroughput(), tests: { tests: 0, passed: 0, failed: 0 } };
+const metrics = { generated_by: 'scripts/bench.js', replan: replanStats(), llm_replan: llmReplanMetrics(), latency: await latency(), throughput: await measureThroughput(), tests: { tests: 0, passed: 0, failed: 0 } };
 // The tests read docs/metrics.json, so write the measured numbers first, then count the tests against them.
 writeFileSync(join(root, 'docs', 'metrics.json'), `${JSON.stringify(metrics, null, 2)}\n`);
 const rebuildDocs = () => spawnSync('node', [join(root, 'scripts', 'build-readme.js')], { cwd: root, encoding: 'utf8' });

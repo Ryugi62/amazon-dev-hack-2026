@@ -1,0 +1,174 @@
+{
+ "model": "gemini-2.5-flash",
+ "prompt_file": "scripts/llm-replan-prompt.txt",
+ "seed": 2026,
+ "temperature": 0,
+ "records": [
+  {
+   "index": 0,
+   "minutes": 115,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 1,
+   "minutes": 74,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 2,
+   "minutes": 69,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 3,
+   "minutes": 62,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 4,
+   "minutes": 60,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 5,
+   "minutes": 72,
+   "blocks": 6,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 6,
+   "minutes": 107,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 7,
+   "minutes": 73,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 8,
+   "minutes": 90,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 9,
+   "minutes": 114,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 10,
+   "minutes": 63,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 14,
+   "minutes": 22,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 15,
+   "minutes": 104,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 17,
+   "minutes": 29,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 18,
+   "minutes": 37,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  }
+ ],
+ "date": "2026-10-16"
+}

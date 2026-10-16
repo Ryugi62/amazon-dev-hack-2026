@@ -1,0 +1,11 @@
+You are the assistant in a voice planner. My day is below. Times are 24-hour HH:MM on one calendar day. Blocks marked FIXED are fixed events (a lecture, a shift, a dinner).
+
+{{schedule}}
+
+It is {{now}} and I'm {{minutes}} minutes late: my first block, "{{first_title}}", can start no earlier than {{earliest}}. Re-plan the rest of my day.
+
+Rules: do not move any FIXED event. No two blocks may share a minute. Keep each block's length. Nothing may run past 24:00; if a block no longer fits, put its id in "dropped".
+
+Answer with JSON only, in this shape:
+{"blocks":[{"id":"b0","start":"HH:MM","end":"HH:MM"}],"dropped":["b3"]}
+List every block in "blocks" or in "dropped".

@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderReadme, renderDescription } from '../build-readme.js';
+import { renderReadme, renderDescription, renderComparison } from '../build-readme.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 // SPEC.md may carry one HTML comment with repo-gate keywords; comments are not rendered, so they are ignored here.
@@ -29,7 +29,7 @@ export function checkInternalTraces() {
   return hits;
 }
 export function checkReadmeMatchesMetrics() {
-  return read('README.md') === renderReadme() && read('docs/description.md') === renderDescription();
+  return read('README.md') === renderReadme() && read('docs/description.md') === renderDescription() && read('docs/comparison.md') === renderComparison();
 }
 // A leftover {{name}} means the template was not rendered (the template itself is the only file allowed to hold them).
 export function checkUnrenderedPlaceholders() {

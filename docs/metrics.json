@@ -8,11 +8,35 @@
     "baseline_mean_overlap_minutes": 36.3,
     "fixed_blocks_moved": 0
   },
+  "llm_replan": {
+    "models": "gemini-2.5-flash, gemini-3-flash-preview, gemini-3.1-flash-lite, gemini-3.5-flash-lite, gemini-3.5-flash, gemini-3.6-flash, gemini-3.7-flash, gemini-3.8-flash",
+    "model_count": 8,
+    "date": "2026-10-16",
+    "prompt_file": "scripts/llm-replan-prompt.txt",
+    "seed": 2026,
+    "distinct_days": 112,
+    "attempted": 112,
+    "measured": 51,
+    "unparseable": 0,
+    "unmeasured": 61,
+    "overlap_runs": 5,
+    "overlap_percent": 9.8,
+    "mean_overlap_minutes": 19.6,
+    "fixed_blocks_moved": 0,
+    "runs_with_fixed_moved": 0,
+    "missing_blocks": 0,
+    "runs_with_missing": 0,
+    "clean_runs": 46,
+    "nextone_overlap_runs": 0,
+    "nextone_fixed_blocks_moved": 0,
+    "nextone_deferred_blocks": 0,
+    "table_rows": "| gemini-2.5-flash | 15 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 15 of 15 | 0 |\n| gemini-3-flash-preview | 7 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 7 of 7 | 13 |\n| gemini-3.1-flash-lite | 0 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 0 of 0 | 20 |\n| gemini-3.5-flash-lite | 20 | 5 (25%) | 19.6 | 0 in 0 runs | 0 in 0 runs | 15 of 20 | 0 |\n| gemini-3.5-flash | 3 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 3 of 3 | 7 |\n| gemini-3.6-flash | 2 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 2 of 2 | 1 |\n| gemini-3.7-flash | 3 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 3 of 3 | 9 |\n| gemini-3.8-flash | 1 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 1 of 1 | 11 |"
+  },
   "latency": {
     "calls": 200,
     "p50_ms": 1.7,
-    "p95_ms": 2.1,
-    "max_ms": 3,
+    "p95_ms": 2.5,
+    "max_ms": 2.7,
     "limit_ms": 500
   },
   "throughput": {
@@ -22,55 +46,55 @@
         "concurrency": 1,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 315,
-        "p50_ms": 2.9,
-        "p95_ms": 4.9,
-        "max_ms": 7.6
+        "calls_per_second": 327,
+        "p50_ms": 2.8,
+        "p95_ms": 4.8,
+        "max_ms": 9
       },
       {
         "concurrency": 4,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 1513,
-        "p50_ms": 2.9,
-        "p95_ms": 3.7,
-        "max_ms": 5.6
+        "calls_per_second": 1390,
+        "p50_ms": 3,
+        "p95_ms": 3.9,
+        "max_ms": 9.8
       },
       {
         "concurrency": 16,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 3282,
-        "p50_ms": 4.5,
-        "p95_ms": 7.8,
-        "max_ms": 18.4
+        "calls_per_second": 3325,
+        "p50_ms": 4.4,
+        "p95_ms": 7.2,
+        "max_ms": 18.8
       },
       {
         "concurrency": 64,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 3180,
-        "p50_ms": 8.8,
-        "p95_ms": 112.8,
-        "max_ms": 180
+        "calls_per_second": 3218,
+        "p50_ms": 9.6,
+        "p95_ms": 114.6,
+        "max_ms": 178.9
       },
       {
         "concurrency": 256,
         "calls": 600,
         "errors": 0,
-        "calls_per_second": 2693,
-        "p50_ms": 9.8,
-        "p95_ms": 199.3,
-        "max_ms": 210.6
+        "calls_per_second": 2751,
+        "p50_ms": 9.2,
+        "p95_ms": 195.5,
+        "max_ms": 206.3
       }
     ],
-    "peak_calls_per_second": 3282,
+    "peak_calls_per_second": 3325,
     "knee_concurrency": 64,
     "max_concurrency_under_limit": 256
   },
   "tests": {
-    "tests": 129,
-    "passed": 129,
+    "tests": 137,
+    "passed": 137,
     "failed": 0
   }
 }

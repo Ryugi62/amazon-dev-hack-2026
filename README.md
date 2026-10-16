@@ -31,7 +31,7 @@ If a check fails, times out or the network is down, the block stays planned and 
 - A synthetic sample is in `samples/calendar/sample-day.ics`. Tests use only that file.
 
 ## What is different from what Alexa+ already does
-See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
+See [docs/comparison.md](docs/comparison.md), including a measured row for what a host model does on its own. Short version: Alexa+ reminders can be snoozed and followed up until you say you are done. NextOne re-plans the whole remaining day around fixed events and refuses a spoken "done" without proof.
 
 ## The metric (one definition, used everywhere)
 **Overlap minutes after a late event** = minutes covered by two or more blocks once the user says "I'm N minutes late" (lower is better). Baseline: the behaviour of a reminder that only moves the late item.
@@ -43,11 +43,29 @@ See [docs/comparison.md](docs/comparison.md). Short version: Alexa+ reminders ca
 | Runs where the shift-only baseline leaves overlap | 542 (72.2%) |
 | Mean overlap the baseline leaves, over those runs (minutes) | 36.3 |
 | Fixed blocks moved by NextOne | 0 |
-| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 2.1 / 3 ms over 200 calls |
-| Throughput on one loopback server (real concurrent MCP calls, concurrency 1 / 4 / 16 / 64 / 256, 600 calls per level, 0 errors) | peak 3282 calls per second; p95 more than triples at concurrency 64; p95 stays under the 500 ms limit (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) up to concurrency 256 |
-| Tests | 129 of 129 passing |
+| Tool round trip, local loopback (p50 / p95 / max, limit 500 ms, from the quickstart: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) | 1.7 / 2.5 / 2.7 ms over 200 calls |
+| Throughput on one loopback server (real concurrent MCP calls, concurrency 1 / 4 / 16 / 64 / 256, 600 calls per level, 0 errors) | peak 3325 calls per second; p95 more than triples at concurrency 64; p95 stays under the 500 ms limit (https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html) up to concurrency 256 |
+| Tests | 137 of 137 passing |
 
 The 1000 seeded days are all generated, but `scripts/bench.js` skips every day whose first block is a fixed event (nothing to run late on), so 751 are counted; SPEC.md's 1000 is the generated count, this table is the counted one. These numbers are generated into `docs/metrics.json`; `npm run check-docs` fails if this README disagrees with it.
+
+## Versus the host model alone (measured)
+Question a judge would ask: "Would the Alexa+ model re-plan the day by itself, without this add-on?" I cannot call the Alexa+ model, so I measured a stand-in with the same seeded days as the metric above: `scripts/llm-baseline.js` gives a hosted Gemini model the day in plain language, says "I'm N minutes late, re-plan the rest of my day, do not move fixed events" (prompt text: `scripts/llm-replan-prompt.txt`, it also states no overlap, keep lengths, nothing past 24:00), parses the JSON answer and counts it with the same overlap checker NextOne is held to. Run date 2026-10-16, temperature 0, seed 2026. Per-day scores: `docs/llm-baseline/`. Free-tier daily limits are about 20 calls per model, so each model saw a different slice of the seeded list: 112 calls over 112 different days.
+
+| Model | Answers scored | Days with any overlap | Mean overlap on those days (min) | Fixed events moved | Blocks lost | Fully clean answers | Calls not measured |
+|---|---|---|---|---|---|---|---|
+| gemini-2.5-flash | 15 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 15 of 15 | 0 |
+| gemini-3-flash-preview | 7 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 7 of 7 | 13 |
+| gemini-3.1-flash-lite | 0 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 0 of 0 | 20 |
+| gemini-3.5-flash-lite | 20 | 5 (25%) | 19.6 | 0 in 0 runs | 0 in 0 runs | 15 of 20 | 0 |
+| gemini-3.5-flash | 3 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 3 of 3 | 7 |
+| gemini-3.6-flash | 2 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 2 of 2 | 1 |
+| gemini-3.7-flash | 3 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 3 of 3 | 9 |
+| gemini-3.8-flash | 1 | 0 (0%) | 0 | 0 in 0 runs | 0 in 0 runs | 1 of 1 | 11 |
+| **All models together** | 51 | 5 (9.8%) | 19.6 | 0 in 0 runs | 0 in 0 runs | 46 of 51 | 61 |
+| NextOne on the same scored days | 51 | 0 | 0 | 0 | 0 deferred, none lost | 51 of 51 | 0 |
+
+"Calls not measured" are failed calls (daily limit, server overload, timeout); they are counted separately and left out of every other column. How to read it: on the days that were scored, most of the models re-planned cleanly when the rules were in the prompt, so NextOne does not claim that a model cannot re-plan a day. What the table shows is that a prompt is a request: where a model slipped, the answer still arrived and nothing stopped it, whereas NextOne's server refuses such a plan on every call. Limits: these are Gemini models, not the Alexa+ model; the prompt spells out the rules; the models saw different days, so the pooled row is not a paired comparison; nothing here tests state across sessions or the proof rule for done.
 
 ## Required technology and where it is used
 | API / SDK | Used for | File |

@@ -1,0 +1,39 @@
+{
+ "model": "gemini-3.6-flash",
+ "prompt_file": "scripts/llm-replan-prompt.txt",
+ "seed": 2026,
+ "temperature": 0,
+ "records": [
+  {
+   "index": 101,
+   "minutes": 87,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 103,
+   "minutes": 106,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 104,
+   "minutes": 87,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  }
+ ],
+ "date": "2026-10-16"
+}

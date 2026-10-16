@@ -15,8 +15,10 @@ export function renderTemplate(name) {
 }
 export const renderReadme = () => renderTemplate('README.tpl.md');
 export const renderDescription = () => renderTemplate('description.tpl.md');
+export const renderComparison = () => renderTemplate('comparison.tpl.md');
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   writeFileSync(join(root, 'README.md'), renderReadme());
   writeFileSync(join(root, 'docs', 'description.md'), renderDescription());
+  writeFileSync(join(root, 'docs', 'comparison.md'), renderComparison());
 }

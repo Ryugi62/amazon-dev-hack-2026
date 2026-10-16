@@ -1,0 +1,114 @@
+{
+ "model": "gemini-3.7-flash",
+ "prompt_file": "scripts/llm-replan-prompt.txt",
+ "seed": 2026,
+ "temperature": 0,
+ "records": [
+  {
+   "index": 130,
+   "minutes": 59,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 132,
+   "minutes": 29,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 136,
+   "minutes": 14,
+   "blocks": 7,
+   "nextone_deferred": 1,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 138,
+   "minutes": 52,
+   "blocks": 9,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 140,
+   "minutes": 20,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 141,
+   "minutes": 51,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 142,
+   "minutes": 33,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 143,
+   "minutes": 81,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 144,
+   "minutes": 5,
+   "blocks": 7,
+   "nextone_deferred": 0,
+   "status": "scored",
+   "overlap_minutes": 0,
+   "fixed_moved": 0,
+   "missing": 0,
+   "dropped": 0
+  },
+  {
+   "index": 145,
+   "minutes": 37,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  },
+  {
+   "index": 146,
+   "minutes": 80,
+   "blocks": 8,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "rate_limit"
+  },
+  {
+   "index": 147,
+   "minutes": 40,
+   "blocks": 5,
+   "nextone_deferred": 0,
+   "status": "unmeasured",
+   "reason": "http_503"
+  }
+ ],
+ "date": "2026-10-16"
+}
